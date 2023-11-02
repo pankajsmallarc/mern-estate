@@ -1,11 +1,15 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import colors from 'colors'
+import colors from 'colors';
+import cors from 'cors';
 import mongoose from 'mongoose';
+import morgan from 'morgan';
 import userRouter from './routes/userRoute.js';
 import authRouter from './routes/authRoute.js';
 dotenv.config();
 const app = express();
+app.use(morgan('dev'))
+app.use(cors())
 app.use(express.json());
 mongoose.connect(process.env.DATABASE).then(() => {
     console.log("connected to MOngoDB successfully".bgCyan)
@@ -15,8 +19,8 @@ mongoose.connect(process.env.DATABASE).then(() => {
 app.listen(4000, () => {
     console.log("Server is running at 4000")
 })
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/auth', authRouter);
+app.use('/api/users', userRouter);
+app.use('/api/auth', authRouter);
 
 app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500;
